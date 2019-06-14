@@ -8,7 +8,11 @@ function isImportedFromRHL(path, name) {
 
   if (bindingType === 'ImportSpecifier' || bindingType === 'ImportNamespaceSpecifier') {
     const bindingParent = binding.path.parent;
-    return RHLPackages.includes(bindingParent.source.value);
+    let isImported = false;
+    if(RHLPackages.indexOf(bindingParent.source.value) !== -1) {
+        isImported = true;
+    }
+    return isImported;
   }
 
   return false;
@@ -22,7 +26,12 @@ function getRHLContext(file) {
     const bodyItem = body[i];
     const { source, specifiers } = bodyItem;
 
-    if (bodyItem.type !== 'ImportDeclaration' || !RHLPackages.includes(source.value)) {
+    let getRHL = false;
+    if(RHLPackages.indexOf(bindingParent.source.value) !== -1) {
+        getRHL = true;
+    }
+
+    if (bodyItem.type !== 'ImportDeclaration' || !getRHL) {
       continue;
     }
 
